@@ -41,15 +41,3 @@ Supermarkets face challenges forecasting product-level sales due to changing cus
 | 📡 Monitoring     | Python logging, optional: MLflow, Prometheus              |
 
 ---
-
-## 🔁 Pipeline Architecture
-
-```plaintext
-[ Live Transaction Data ] --> [ Django API ]
-                                |
-                                ↓
-                      [ ML Inference Engine ]
-                                ↓
-                   [ Streamlit Dashboard (Live) ]
-                                ↓
-                        [ Logging & Monitoring ]
