@@ -10,7 +10,7 @@ st.set_page_config(page_title='Sales dashboard',
 # Load dataset
 @st.cache_data
 def load_data():
-    df = pd.read_csv(r'C:\Users\USER\Desktop\Supermarket sales\Supermarket_Sales\data\Sales.csv')
+    df = pd.read_csv('Sales.csv')
     # Convert 'Time' to hour with coercion for invalid parsing
     df['hour'] = pd.to_datetime(df['Time'], errors='coerce').dt.hour
     
