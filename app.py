@@ -123,7 +123,7 @@ group_rating_per_products = df_selection.groupby('Product line')['Rating'].mean(
 group_taxes_per_gender = df_selection.groupby('Gender')['Tax 5%'].mean().reset_index()
 group_taxes_per_product_line = df_selection.groupby('Product line')['Tax 5%'].mean().reset_index()
 group_products_per_gross_income = df_selection.groupby('Product line')['gross income'].mean().reset_index()
-customer_type = df_selection['Customer_type'].value_counts().reset_index()
+
 # Tables
 st.subheader('Grouped Statistics')
 st.dataframe(group_gender_payment)
@@ -138,7 +138,6 @@ st.dataframe(group_rating_per_products)
 st.dataframe(group_taxes_per_gender)
 st.dataframe(group_taxes_per_product_line)
 st.dataframe(group_products_per_gross_income)
-st.dataframe(customer_type)
 
 st.markdown('---')
 
@@ -152,9 +151,8 @@ fig1 = px.bar(group_gender_payment,
               title="Total Sales by Gender and Payment",
               labels={"sum": "Total Sales"},
               template="plotly_white")
-# Removed fig1.update_trace as per your request
 st.plotly_chart(fig1, use_container_width=True)
-st.caption('This chart shows thetotal sales by Gender and payment')
+st.caption('This chart shows the total sales by Gender and payment')
 st.caption('Females generally spend more than men and they make more cash payments as well')
 
 st.subheader("Branch vs Product Line Sales")
@@ -174,12 +172,11 @@ fig3 = px.bar(group_city_customer,
               y="sum",
               color="Customer_type",
               barmode="group",
-              title="City-wis e Sales by Customer Type",
+              title="City-wise Sales by Customer Type",
               labels={"sum": "Total Sales"},
               template="plotly_white")
 st.plotly_chart(fig3, use_container_width=True)
-st.caption('We can also observer that the Members typically bring in more sales that the normal customers')
-
+st.caption('We can also observe that the Members typically bring in more sales than the normal customers')
 
 st.subheader("Hourly Sales Trend")
 fig4 = px.line(group_hour,
@@ -200,8 +197,7 @@ fig5 = px.bar(group_product,
               labels={"sum": "Total Sales"},
               template="plotly_white")
 st.plotly_chart(fig5, use_container_width=True)
-st.caption('Food and beverages have the most sales in comparrison to the the health and Beauty')
-
+st.caption('Food and beverages have the most sales in comparison to the health and Beauty')
 
 st.subheader("Quantity by Gender")
 fig6 = px.pie(group_gender_quantity,
@@ -210,16 +206,7 @@ fig6 = px.pie(group_gender_quantity,
               title="Quantity Sold by Gender",
               template="plotly_white")
 st.plotly_chart(fig6, use_container_width=True)
-st.caption("Females have a high quantity threshold in comparisson to males")
-
-st.subheader('Customer segmentation')
-fig12 = px.pie(
-    customer_type,
-    names = 'Customer type',
-    title = 'Customer segments',
-    template= 'plotly_white'
-)
-st.pyplot(fig12, use_container_width=True)
+st.caption("Females have a high quantity threshold in comparison to males")
 
 st.subheader("Quantity by Product Line")
 fig7 = px.bar(group_product_line_quantity,
@@ -257,7 +244,7 @@ fig10 = px.bar(group_taxes_per_product_line,
                labels={"Tax 5%": "Avg Tax"},
                template="plotly_white")
 st.plotly_chart(fig10, use_container_width=True)
-st.caption("We observethat the home and lifetyle category under products is taxed slightly higher while fashion accessories are taxed lower")
+st.caption("We observe that the home and lifestyle category under products is taxed slightly higher while fashion is lower")
 
 st.subheader("Average Gross Income by Product Line")
 fig11 = px.bar(group_products_per_gross_income,
