@@ -152,7 +152,7 @@ fig1 = px.bar(group_gender_payment,
               title="Total Sales by Gender and Payment",
               labels={"sum": "Total Sales"},
               template="plotly_white")
-fig1.update_trace
+# Removed fig1.update_trace as per your request
 st.plotly_chart(fig1, use_container_width=True)
 st.caption('This chart shows thetotal sales by Gender and payment')
 st.caption('Females generally spend more than men and they make more cash payments as well')
@@ -167,6 +167,7 @@ fig2 = px.bar(group_branch_product,
               template="plotly_white")
 st.plotly_chart(fig2, use_container_width=True)
 st.caption('From the chart we can see that branch C brings in more sales than the other branches')
+
 st.subheader("City & Customer Type Sales")
 fig3 = px.bar(group_city_customer,
               x="City",
