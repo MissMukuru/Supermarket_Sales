@@ -13,18 +13,35 @@ app = typer.Typer()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
     features_path: Path = PROCESSED_DATA_DIR / "test_features.csv",
-    model_path: Path = MODELS_DIR / "model.pkl",
+    regression_model_path: Path = MODELS_DIR / "Random_forest_regression_model.pkl",
+    classification_model_path: Path = MODELS_DIR / "Random_forest_classifier_model.pkl",
     predictions_path: Path = PROCESSED_DATA_DIR / "test_predictions.csv",
     # -----------------------------------------
 ):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Performing inference for model...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Inference complete.")
-    # -----------------------------------------
+    logger.info(f'loading features from {features_path}')
+    df = pd.read_csv(features_path)
 
+    X=df.drop(columns=['Target_Total','HighSpender'],errors='ignore')
+
+    logger.info(f'Loading features from {features_path}')
+    df=pd.read_csv(features_path)
+
+    logger.info('Loading the models')
+    reg_models=joblib.load(regression_model_path)
+    clf_model=joblib(classification_model_path)
+
+    logger.info("Making predictions...")
+    y_reg_pred=regression_model_path(X)
+    y_clf_pred=classification_model_path(X)
+
+    logger.info(f'Saving predictions to {predictions_path}')
+    df_predictions=df.copy()
+    df_predictions['Predicted_Total']=y_reg_pred
+    df_predictions['Predicted_HighSpender']=y_clf_pred
+    df_predictions.to_csv(predictions_path, index=False)
+
+    logger.success('Prediction complete...')
+    
 
 if __name__ == "__main__":
     app()
