@@ -23,6 +23,7 @@ def clean_data(
         "gross income": "Gross_Income",
     })
 
+
     data.to_csv(output_path, index=False)
     logger.success(f"Cleaned dataset saved to {output_path}")
 
