@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, accuracy_score, classification_report
 import joblib
-from pathlib import path
+from pathlib import Path
 from loguru import logger
 from tqdm import tqdm
 import typer
@@ -16,14 +16,14 @@ app = typer.Typer()
 
 @app.command()
 def main(
-     features_path: Path = PROCESSED_DATA_DIR / "features.csv",
+    features_path: Path = PROCESSED_DATA_DIR / "features.csv",
     labels_path: Path = PROCESSED_DATA_DIR / "labels.csv",
     model_path: Path = MODELS_DIR / "model.pkl",
     regression_model_path: Path = MODELS_DIR / "Random_forest_regression_model.pkl",
     classification_model_path: Path = MODELS_DIR / "Random_forest_classifier_model.pkl"
 
  ):
-     logger.info("Loading features and labels.....")
+    logger.info("Loading features and labels.....")
     X = pd.read_csv(features_path)
     y = pd.read_csv(labels_path)
 
@@ -41,7 +41,7 @@ def main(
     y_pred_r=reg_model.predict(X_test_r)
 
     logger.info(f"Regression R2: {r2_score(y_test_r, y_pred_r):.4f}")
-    logger.info(f"Regression RMSE: {mean_squared_error(y_test_r, y_pred_r, squared=False):.4f}")
+    logger.info(f"Regression RMSE: {mean_squared_error(y_test_r, y_pred_r):.4f}")
 
     joblib.dump(reg_model,regression_model_path)
     logger.success(f'Regression Model saved to {regression_model_path}')
