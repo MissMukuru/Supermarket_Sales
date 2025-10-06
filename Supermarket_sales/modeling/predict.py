@@ -12,7 +12,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    features_path: Path = PROCESSED_DATA_DIR / "test_features.csv",
+    features_path: Path = PROCESSED_DATA_DIR / "features.csv",
     regression_model_path: Path = MODELS_DIR / "Random_forest_regression_model.pkl",
     classification_model_path: Path = MODELS_DIR / "Random_forest_classifier_model.pkl",
     predictions_path: Path = PROCESSED_DATA_DIR / "test_predictions.csv",
