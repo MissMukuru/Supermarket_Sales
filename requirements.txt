@@ -19,5 +19,5 @@ plotly>=6.0.0
 # Environment & config
 python-dotenv>=1.0.0
 pathlib>=1.0.1
-
- 
+streamlit
+plotly
