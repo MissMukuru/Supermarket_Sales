@@ -3,14 +3,12 @@ import plotly.express as px
 import streamlit as st
 from pathlib import Path
 import joblib
-from Supermarket_sales.config import PROCESSED_DATA_DIR
+from Supermarket_sales.config import PROCESSED_DATA_DIR, MODELS_DIR  # ✅ Added MODEL_DIR import
 
 # Set page configuration
 st.set_page_config(page_title='Sales dashboard',
                    page_icon=':bar_chart:',
                    layout='wide')
-
- 
 
 @st.cache_data
 def load_data():
@@ -99,6 +97,7 @@ df_selection = df[
 if 'All' not in product_line:
     df_selection = df_selection[df_selection['Product line'].isin(product_line)]
 
+# --------------------------- PAGES ---------------------------
 
 if page == 'EDA':
     st.title("Exploratory Data Analysis")
@@ -127,7 +126,7 @@ elif page == 'Feature Insights/KPI':
     st.markdown("---")
 
     # Grouped statistics
-    group_gender_payment = df.groupby(['Gender', 'Payment'])['Total'].sum().reset_index()    
+    group_gender_payment = df_selection.groupby(['Gender', 'Payment'])['Total'].sum().reset_index()    
     group_branch_product = df_selection.groupby(['Branch', 'Product line'])['Total'].agg(['count', 'sum', 'mean', 'std']).reset_index()
     group_city_customer = df_selection.groupby(['City', 'Customer_type'])['Total'].agg(['count', 'sum', 'mean', 'std']).reset_index()
     group_hour = df_selection.groupby('hour')['Total'].sum().reset_index()
@@ -159,15 +158,29 @@ elif page == 'Feature Insights/KPI':
 
 elif page == 'Visualizations':
     st.title("Visualizations")
-    # Bar chart: Sales by Gender & Payment
+
+    # ✅ Redefine group data to avoid NameError
+    group_gender_payment = df_selection.groupby(['Gender', 'Payment'])['Total'].sum().reset_index()
+    group_branch_product = df_selection.groupby(['Branch', 'Product line'])['Total'].sum().reset_index()
+    group_city_customer = df_selection.groupby(['City', 'Customer_type'])['Total'].sum().reset_index()
+    group_hour = df_selection.groupby('hour')['Total'].sum().reset_index()
+    group_product = df_selection.groupby('Product line')['Total'].sum().reset_index()
+    group_gender_quantity = df_selection.groupby('Gender')['Quantity'].sum().reset_index()
+    group_product_line_quantity = df_selection.groupby('Product line')['Quantity'].sum().reset_index()
+    group_rating_per_products = df_selection.groupby('Product line')['Rating'].mean().reset_index()
+    group_taxes_per_gender = df_selection.groupby('Gender')['Tax 5%'].mean().reset_index()
+    group_taxes_per_product_line = df_selection.groupby('Product line')['Tax 5%'].mean().reset_index()
+    group_products_per_gross_income = df_selection.groupby('Product line')['gross income'].mean().reset_index()
+
+    # Plots
     st.subheader("Sales by Gender & Payment Method")
     fig1 = px.bar(group_gender_payment,
                 x="Gender",
-                y="sum",
+                y="Total",
                 color="Payment",
                 barmode="group",
                 title="Total Sales by Gender and Payment",
-                labels={"sum": "Total Sales"},
+                labels={"Total": "Total Sales"},
                 template="plotly_white")
     st.plotly_chart(fig1, use_container_width=True)
     st.caption('This chart shows the total sales by Gender and payment')
@@ -176,10 +189,10 @@ elif page == 'Visualizations':
     st.subheader("Branch vs Product Line Sales")
     fig2 = px.bar(group_branch_product,
                 x="Branch",
-                y="sum",
+                y="Total",
                 color="Product line",
                 title="Branch-wise Product Line Sales",
-                labels={"sum": "Total Sales"},
+                labels={"Total": "Total Sales"},
                 template="plotly_white")
     st.plotly_chart(fig2, use_container_width=True)
     st.caption('From the chart we can see that branch C brings in more sales than the other branches')
@@ -187,11 +200,11 @@ elif page == 'Visualizations':
     st.subheader("City & Customer Type Sales")
     fig3 = px.bar(group_city_customer,
                 x="City",
-                y="sum",
+                y="Total",
                 color="Customer_type",
                 barmode="group",
                 title="City-wise Sales by Customer Type",
-                labels={"sum": "Total Sales"},
+                labels={"Total": "Total Sales"},
                 template="plotly_white")
     st.plotly_chart(fig3, use_container_width=True)
     st.caption('We can also observe that the Members typically bring in more sales than the normal customers')
@@ -210,9 +223,9 @@ elif page == 'Visualizations':
     st.subheader("Sales per Product Line")
     fig5 = px.bar(group_product,
                 x="Product line",
-                y="sum",
+                y="Total",
                 title="Total Sales per Product Line",
-                labels={"sum": "Total Sales"},
+                labels={"Total": "Total Sales"},
                 template="plotly_white")
     st.plotly_chart(fig5, use_container_width=True)
     st.caption('Food and beverages have the most sales in comparison to the health and Beauty')
@@ -220,7 +233,7 @@ elif page == 'Visualizations':
     st.subheader("Quantity by Gender")
     fig6 = px.pie(group_gender_quantity,
                 names="Gender",
-                values="sum",
+                values="Quantity",
                 title="Quantity Sold by Gender",
                 template="plotly_white")
     st.plotly_chart(fig6, use_container_width=True)
@@ -273,10 +286,10 @@ elif page == 'Visualizations':
     st.plotly_chart(fig11, use_container_width=True)
 
 elif page == "ML Predictions":
-    st.header("🤖 Machine Learning Predictions")
+    st.header("Machine Learning Predictions")
 
-    reg_model_path = MODEL_DIR / "Random_forest_regression_model.pkl"
-    clf_model_path = MODEL_DIR / "Random_forest_classifier_model.pkl"
+    reg_model_path = MODELS_DIR / "Random_forest_regression_model.pkl"
+    clf_model_path = MODELS_DIR / "Random_forest_classifier_model.pkl"
 
     try:
         reg_model = joblib.load(reg_model_path)
@@ -289,7 +302,7 @@ elif page == "ML Predictions":
     mode = st.radio("Select how you want to make predictions:", ["📤 Upload CSV", "🎛️ Manual Input"])
 
     if mode == "Upload CSV":
-         ...
+        st.info("Upload CSV mode not yet implemented.")  # ✅ replaced `...`
     else:
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -321,3 +334,26 @@ elif page == "ML Predictions":
                 "Weekday",
                 ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             )
+        if st.button("Predict"):
+            input_data = pd.DataFrame({
+                "Unit price": [unit_price],
+                "Quantity": [quantity],
+                "Rating": [rating],
+                "Gender": [gender],
+                "Branch": [branch],
+                "City": [city],
+                "Customer_type": [customer_type],
+                "Payment": [payment],
+                "Product line": [product_line],
+                "hour": [hour],
+                "weekday": [weekday]
+            })
+
+            try:
+                prediction_reg = reg_model.predict(input_data)[0]
+                prediction_clf = clf_model.predict(input_data)[0]
+
+                st.success(f"**Predicted Total Sales:** ${prediction_reg:,.2f}")
+                st.info(f"**Predicted Customer Type:** {prediction_clf}")
+            except Exception as e:
+                st.error(f"Prediction failed: {e}")
