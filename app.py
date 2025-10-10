@@ -127,7 +127,7 @@ elif page == 'Feature Insights/KPI':
     st.markdown("---")
 
     # Grouped statistics
-    group_gender_payment = df_selection.groupby(['Gender', 'Payment'])['Total'].agg(['count', 'sum', 'mean', 'std']).reset_index()
+    group_gender_payment = df.groupby(['Gender', 'Payment'])['Total'].sum().reset_index()    
     group_branch_product = df_selection.groupby(['Branch', 'Product line'])['Total'].agg(['count', 'sum', 'mean', 'std']).reset_index()
     group_city_customer = df_selection.groupby(['City', 'Customer_type'])['Total'].agg(['count', 'sum', 'mean', 'std']).reset_index()
     group_hour = df_selection.groupby('hour')['Total'].sum().reset_index()
