@@ -21,14 +21,14 @@ def simple_encode(df: pd.DataFrame) -> pd.DataFrame:
 
 @app.command()
 def main(
-    input_path: Path = PROCESSED_DATA_DIR / "Sales.csv",
+    input_path: Path = PROCESSED_DATA_DIR / "Clean_data.csv",
     features_path: Path = PROCESSED_DATA_DIR / "features.csv",
     labels_path: Path = PROCESSED_DATA_DIR / "labels.csv",
 ):
     """
     Generate ML-ready features and labels from cleaned dataset.
     """
-    # ✅ Ensure output directory exists
+    # Ensure output directory exists
     os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
 
     if not input_path.exists():
@@ -38,7 +38,6 @@ def main(
     logger.info(f"Loading cleaned dataset from {input_path}")
     df = pd.read_csv(input_path)
 
-    # --- Temporal feature extraction ---
     df["Date"] = pd.to_datetime(df["Date"], dayfirst=True, errors="coerce")
     df["Time"] = df["Time"].astype(str)
     df["Year"] = df["Date"].dt.year
@@ -53,12 +52,10 @@ def main(
         labels=["Morning", "Afternoon", "Evening", "Night"],
     )
 
-    # --- Target creation ---
     df["Target_Total"] = df["Total"]  # regression
     df["HighSpender"] = (df["Total"] > 500).astype(int)  # classification
     df["Average_price_Item"] = df["Total"] / df["Quantity"]
 
-    # --- Drop unnecessary columns ---
     cols_to_drop = [
         "Invoice ID",
         "gross margin percentage ",
@@ -82,8 +79,8 @@ def main(
         features_encoded.to_csv(features_path, index=False)
         labels.to_csv(labels_path, index=False)
 
-    logger.success(f"✅ Features saved to {features_path}")
-    logger.success(f"✅ Labels saved to {labels_path}")
+    logger.success(f"Features saved to {features_path}")
+    logger.success(f"Labels saved to {labels_path}")
 
 
 if __name__ == "__main__":
