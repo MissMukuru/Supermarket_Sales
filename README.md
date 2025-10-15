@@ -1,4 +1,3 @@
-```markdown
 # Supermarket Sales Analysis and Prediction App
 
 This project is an end-to-end **data analysis and machine learning application** for predicting supermarket sales performance and visualizing key business metrics. It includes **data preprocessing, exploratory data analysis (EDA), model training, and a Streamlit dashboard** for user interaction and prediction.
@@ -114,15 +113,6 @@ This script handles:
 * plotly, matplotlib, seaborn
 * streamlit
 * loguru, tqdm, dotenv
-
----
-
-## Author
-
-**Abby [Your Full Name]**
-Aspiring Full Stack Data Scientist
-JKUAT, Kenya
-GitHub: [https://github.com/<your-username>](https://github.com/<your-username>)
 
 ---
 
